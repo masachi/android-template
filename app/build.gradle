@@ -1,0 +1,227 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'ga.cv3sarato.android'
+    compileSdk 31
+
+    defaultConfig {
+        applicationId "ga.cv3sarato.android"
+        minSdk 28
+        targetSdk 31
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                // 每个使用Router的module都要配置该参数
+                arguments = ["moduleName": project.name]
+            }
+        }
+
+        ndk {
+            abiFilters 'armeabi-v7a', 'x86', 'arm64-v8a'
+        }
+
+        packagingOptions {
+            // The project react-native does not provide 64-bit binaries at the
+            // time of this writing. Unfortunately, packaging any 64-bit
+            // binaries into the .apk will crash the app at runtime on 64-bit
+            // platforms.
+            exclude '/lib/mips64/**'
+            exclude '/lib/x86_64/**'
+        }
+
+        dataBinding {
+            enabled = true
+        }
+
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            //是否混淆,开发是选否
+            minifyEnabled false
+            //是否输出日志
+            buildConfigField 'boolean', 'IS_DEBUG', 'true'
+            //对应服务器地址
+            buildConfigField 'String', 'SERVER_URL', '"https://debug_url"'
+        }
+
+        Test {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField 'boolean', 'IS_DEBUG', 'false'
+            buildConfigField 'String', 'SERVER_URL', '"https://test_url"'
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            res.srcDirs = ['src/main/res']
+            jniLibs.srcDir 'jniLibs'
+            assets.srcDir 'assets'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildToolsVersion '33.0.1'
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.7.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+//    deprecated
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    implementation 'commons-io:commons-io:2.11.0'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
+    implementation 'org.apache.commons:commons-collections4:4.4'
+
+    //网络请求
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+
+    //图片加载
+    implementation 'com.github.bumptech.glide:glide:4.14.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
+
+    //弹出框
+    // deprecated
+    implementation 'com.orhanobut:dialogplus:1.11@aar'
+
+    //flexBox
+    // deprecated
+    implementation 'com.google.android:flexbox:1.0.0'
+
+    //tab
+    // deprecated
+    implementation 'devlight.io:navigationtabbar:1.2.5'
+    implementation 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
+    implementation 'com.ogaclejapan.smarttablayout:utils-v4:1.6.1@aar'
+
+    //时间选择
+    // deprecated
+    implementation 'com.wdullaer:materialdatetimepicker:3.6.2'
+
+    //状态栏
+    // deprecated
+    implementation 'com.jaeger.statusbarutil:library:1.5.1'
+
+    //通知
+    // deprecated
+    implementation 'com.github.GrenderG:Toasty:1.3.0'
+
+    //角标
+    // deprecated
+    implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
+
+    //路由
+    // deprecated
+    implementation 'com.chenenyu.router:router:1.5.2'
+
+    // 每个使用了Router注解的module都要添加该注解处理器
+    // deprecated
+    annotationProcessor 'com.chenenyu.router:compiler:1.5.0'
+
+    //JSON
+    implementation 'com.squareup.moshi:moshi:1.14.0'
+
+    //Ptr & Load More
+    // deprecated
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
+    implementation 'com.timehop.stickyheadersrecyclerview:library:0.4.3@aar'
+
+    //Localization
+    // deprecated
+    implementation 'com.akexorcist:localizationactivity:1.2.2'
+
+    //主题
+    // deprecated
+    implementation 'skin.support:skin-support:3.1.0-beta1'
+
+    //大图查看
+    // deprecated
+    implementation 'com.github.piasy:BigImageViewer:1.8.1'
+    implementation 'com.github.piasy:GlideImageLoader:1.4.6'
+
+    //权限
+    // deprecated
+    implementation('com.github.hotchemi:permissionsdispatcher:3.3.1') {
+        exclude module: "support-v13"
+    }
+    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:3.3.1"
+
+    //QR
+    // https://mvnrepository.com/artifact/com.google.zxing/core
+    implementation 'com.google.zxing:core:3.5.1'
+
+    //图库
+    implementation 'com.github.lovetuzitong:MultiImageSelector:1.2'
+
+    //下拉框
+    // deprecated
+    implementation 'com.github.arcadefire:nice-spinner:1.3.4'
+
+    //expand
+    // deprecated
+    implementation 'com.github.traex.expandablelayout:library:1.2.2'
+
+    //toolbar
+    implementation 'com.wuhenzhizao:titlebar:1.1.3'
+    implementation 'com.jaeger.statusbarutil:library:1.5.1'
+
+    //drawer
+    // deprecated
+    implementation 'com.mxn.soul:flowingdrawer-core:2.0.0'
+    implementation 'com.nineoldandroids:library:2.4.0'
+
+    //右滑返回
+    implementation 'me.imid.swipebacklayout.lib:library:1.1.0'
+
+    //右滑删除
+    implementation "com.daimajia.swipelayout:library:1.2.0@aar"
+
+    //alphabet
+    implementation 'com.github.viethoa:fastscroller:1.2.0'
+
+    //保活
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+    //RxJava
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
+
+    implementation 'com.google.code.gson:gson:2.8.9'
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
+    implementation 'org.apache.logging.log4j:log4j-core:2.17.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+}
